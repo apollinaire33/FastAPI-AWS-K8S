@@ -1,0 +1,5 @@
+aiosqlite
+pytest
+pytest-asyncio
+isort
+flake8

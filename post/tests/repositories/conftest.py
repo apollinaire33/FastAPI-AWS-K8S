@@ -1,16 +1,15 @@
 import asyncio
 
 import pytest
-
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from post.core.config import test_database_url
+from post.core.config import TEST_DATABASE_URL
 from post.database.postgresql.models.base import metadata
 from post.repositories.post_repo import ABCPostRepo, PgPostRepo
 from post.rest.models.post import Post, PostCreate
 
-test_engine = create_async_engine(test_database_url)
+test_engine = create_async_engine(TEST_DATABASE_URL)
 
 async_session_local = sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
 

@@ -1,8 +1,8 @@
 import uuid
 
-from post.utils import get_author_details_by_uuid
 from post.repositories.post_repo import ABCPostRepo
-from post.rest.models.post import Post, PostWithAuthor, PostCreate
+from post.rest.models.post import Post, PostCreate, PostWithAuthor
+from post.utils import get_author_details_by_uuid
 
 
 class ModelPostService:

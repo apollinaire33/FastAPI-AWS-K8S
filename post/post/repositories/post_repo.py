@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
 import typing as t
+from abc import ABC, abstractmethod
 
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,7 +15,7 @@ class ABCPostRepo(ABC):
     @abstractmethod
     async def get(self, **kwargs: FilterKwargs) -> Post:
         ...
-    
+
     @abstractmethod
     async def create(self, data: PostCreate) -> Post:
         ...
@@ -26,7 +26,7 @@ class TestPostRepo(ABCPostRepo):
 
     async def get(self, **kwargs: FilterKwargs) -> Post:
         return self.post
-    
+
     async def create(self, data: PostCreate) -> Post:
         return self.post
 
@@ -37,12 +37,12 @@ class PgPostRepo(ABCPostRepo):
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    def _build_filter_query(self, q: expression, **kwargs: FilterKwargs) -> expression:
+    def _build_filter_query(self, query: expression, **kwargs: FilterKwargs) -> expression:
         filter_ = [
             getattr(self._table, field) == value for field, value in kwargs.items()
         ]
-        return q.where(and_(*filter_))
-    
+        return query.where(and_(*filter_))
+
     @staticmethod
     def _to_repr(post_object: PostModel) -> Post:
         return Post(
@@ -54,8 +54,8 @@ class PgPostRepo(ABCPostRepo):
         )
 
     async def get(self, **kwargs: FilterKwargs) -> Post | None:
-        q = self._build_filter_query(select(self._table), **kwargs)
-        result = await self.session.execute(q)
+        query = self._build_filter_query(select(self._table), **kwargs)
+        result = await self.session.execute(query)
         post_object: PostModel | None = result.scalars().first()
         return self._to_repr(post_object) if post_object else None
 

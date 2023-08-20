@@ -1,7 +1,7 @@
-import uuid
 import datetime
-from unittest.mock import patch, Mock
+import uuid
 from typing import Any
+from unittest.mock import Mock, patch
 
 import pytest
 

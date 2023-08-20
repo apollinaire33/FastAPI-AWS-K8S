@@ -1,4 +1,4 @@
 PROJECT_NAME = "fast_api_kubernetes"
 
-database_url = "postgresql+asyncpg://postgres:postgres@db:5432"
-test_database_url = "sqlite+aiosqlite:///:memory:?cache=shared"
+DATABASE_URL = "postgresql+asyncpg://postgres:postgres@db:5432"
+TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:?cache=shared"

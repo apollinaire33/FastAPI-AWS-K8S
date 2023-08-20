@@ -3,8 +3,8 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException
 
 from post.core.dependencies import get_post_service
+from post.rest.models.post import Post, PostCreate, PostWithAuthor
 from post.services.post_service import ModelPostService
-from post.rest.models.post import Post, PostWithAuthor, PostCreate
 
 post_router = APIRouter(prefix="/posts")
 

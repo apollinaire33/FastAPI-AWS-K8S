@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
 import typing as t
+from abc import ABC, abstractmethod
 
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,7 +15,7 @@ class ABCUserRepo(ABC):
     @abstractmethod
     async def get(self, **kwargs: FilterKwargs) -> User:
         ...
-    
+
     @abstractmethod
     async def create(self, data: UserCreate) -> User:
         ...
@@ -26,7 +26,7 @@ class TestUserRepo(ABCUserRepo):
 
     async def get(self, **kwargs: FilterKwargs) -> User:
         return self.user
-    
+
     async def create(self, data: UserCreate) -> User:
         return self.user
 
@@ -42,11 +42,11 @@ class PgUserRepo(ABCUserRepo):
             getattr(self._table, field) == value for field, value in kwargs.items()
         ]
         return q.where(and_(*filter_))
-    
+
     @staticmethod
     def _to_repr(user_object: UserModel) -> User:
         return User(
-            uuid=user_object.uuid, 
+            uuid=user_object.uuid,
             username=user_object.username,
             email=user_object.email,
             age=user_object.age,

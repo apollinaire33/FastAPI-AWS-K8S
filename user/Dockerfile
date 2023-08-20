@@ -1,9 +1,9 @@
 FROM python:3.10 AS base
 
 WORKDIR usr/src/user
-COPY ./requirements.txt .
+COPY ./requirements ./requirements
 
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements/base.txt -r requirements/tests.txt
 
 COPY . .
 CMD alembic upgrade head

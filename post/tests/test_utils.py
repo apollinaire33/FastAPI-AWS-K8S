@@ -2,8 +2,8 @@ from unittest.mock import AsyncMock
 
 import httpx
 
-from post.utils import get_author_details_by_uuid
 from post.rest.models.post import Post
+from post.utils import get_author_details_by_uuid
 
 
 async def test_get_author_details_by_uuid(mock_httpx_async_client, author: dict[str, str], post: Post):

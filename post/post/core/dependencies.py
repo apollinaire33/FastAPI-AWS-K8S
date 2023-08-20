@@ -2,8 +2,8 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from post.database.postgresql.setup_db import get_db
-from post.services.post_service import ModelPostService
 from post.repositories.post_repo import ABCPostRepo, PgPostRepo
+from post.services.post_service import ModelPostService
 
 
 async def get_post_repo(session: AsyncSession = Depends(get_db)) -> ABCPostRepo:

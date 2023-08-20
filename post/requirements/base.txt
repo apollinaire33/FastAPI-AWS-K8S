@@ -1,10 +1,7 @@
 alembic
-aiosqlite
 asyncpg
 fastapi
 httpx
-pytest
 uvicorn
 pydantic
-pytest-asyncio
 sqlalchemy

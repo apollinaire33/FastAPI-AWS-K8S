@@ -1,14 +1,12 @@
 import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from alembic import context
+from sqlalchemy import engine_from_config, pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from alembic import context
-
+from post.core.config import DATABASE_URL
 from post.database.postgresql.models.base import metadata
-from post.core.config import database_url
 
 config = context.config
 
@@ -17,7 +15,7 @@ if config.config_file_name is not None:
 
 target_metadata = metadata
 
-config.set_main_option("sqlalchemy.url", database_url)
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 
 def run_migrations_offline() -> None:
