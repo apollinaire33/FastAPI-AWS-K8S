@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   run_tests:
-    
     runs-on: ubuntu-latest
 
     steps:
@@ -31,4 +30,11 @@ jobs:
         run: |
           pytest user/tests
 
-  
+  build:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: [run_tests]
+
+    steps:
+      - name: Test
+        run: echo "TEST!!!"
