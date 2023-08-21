@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-user-service
+  template:
+    metadata:
+      labels:
+        app: fastapi-user-service
+    spec:
+      containers:
+      - name: fastapi-user-container
+        imagePullPolicy: Always
+        image: 258229000615.dkr.ecr.us-east-1.amazonaws.com/fastapi-user-service:SHA_PLACEHOLDER
+        ports:
+        - containerPort: 8000

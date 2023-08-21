@@ -17,11 +17,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --no-cache-dir --upgrade -r post/requirements/base.txt -r post/requirements/tests.txt
-      
+
       - name: Run linter
         run: |
           flake8 .
-      
+
       - name: Run post tests
         run: |
           pytest post/tests
@@ -36,5 +36,51 @@ jobs:
     needs: [run_tests]
 
     steps:
-      - name: Test
-        run: echo "TEST!!!"
+      - uses: actions/checkout@v3
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v2.0
+        id: install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, Tag, and Push the Image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          USER_ECR_REPOSITORY: fastapi-user-service
+          POST_ECR_REPOSITORY: fastapi-post-service
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$USER_ECR_REPOSITORY:$IMAGE_TAG ./user
+          docker build -t $ECR_REGISTRY/$POST_ECR_REPOSITORY:$IMAGE_TAG ./post
+          docker push $ECR_REGISTRY/$USER_ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$POST_ECR_REPOSITORY:$IMAGE_TAG
+      
+      - name: Prepare deployment file
+        run: |
+          cp k8s/user/deployment.yaml k8s/user/deployment-final.yaml
+          sed -i "s/SHA_PLACEHOLDER/${{ github.sha }}/g" k8s/user/deployment-final.yaml
+
+          cp k8s/post/deployment.yaml k8s/post/deployment-final.yaml
+          sed -i "s/SHA_PLACEHOLDER/${{ github.sha }}/g" k8s/post/deployment-final.yaml
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name fastapi-cluster
+      
+      - name: Deploy to EKS
+        run: |
+          kubectl apply -f k8s/user/deployment-final.yaml
+          kubectl apply -f k8s/post/deployment-final.yaml
+
+          kubectl rollout restart deployment fastapi-user-service
+          kubectl rollout restart deployment fastapi-post-service

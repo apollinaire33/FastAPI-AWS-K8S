@@ -9,6 +9,11 @@ from user.services.user_service import ModelUserService
 user_router = APIRouter(prefix="/users")
 
 
+@user_router.get("/")
+async def get_base():
+    return {"ping": "123123"}
+
+
 @user_router.get("/{user_uuid}", response_model=User)
 async def get_user_details(
     user_uuid: uuid.UUID,
