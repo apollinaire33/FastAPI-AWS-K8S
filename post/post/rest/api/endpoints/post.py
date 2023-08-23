@@ -9,6 +9,11 @@ from post.services.post_service import ModelPostService
 post_router = APIRouter(prefix="/posts")
 
 
+@post_router.get("/")
+async def get_base():
+    return {"ping": "pong"}
+
+
 @post_router.get("/{post_uuid}", response_model=PostWithAuthor)
 async def get_post_details(
     post_uuid: uuid.UUID,

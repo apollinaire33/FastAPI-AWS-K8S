@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-post-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-post-service
+  template:
+    metadata:
+      labels:
+        app: fastapi-post-service
+    spec:
+      containers:
+      - name: fastapi-post-container
+        imagePullPolicy: Always
+        image: 258229000615.dkr.ecr.us-east-1.amazonaws.com/fastapi-post-service:SHA_PLACEHOLDER
+        ports:
+        - containerPort: 8000
